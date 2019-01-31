@@ -1,0 +1,15 @@
+---
+# tasks file for centos-packages
+- name: Pull nkn image
+  shell: docker pull "{{nkn.image}}"
+
+- name: copy wallet and configuration file
+  copy:
+    src: syslocalconf.sh
+    dest: "{{ bin_dir }}/syslocalconf.sh"
+  with_items:
+    - {src: config.json, dest: /nkn/config.json}
+    - {src: wallet.dat, dest: /nkn/wallet.json}
+
+- name: start nkn miner
+  shell: docker run -d --restart=always --name=nkn-1 -v /nkn:/nkn -p 30001-30003:30001-30003 "{{nkn.image}}" nknd -p "{{nkn.password}}"

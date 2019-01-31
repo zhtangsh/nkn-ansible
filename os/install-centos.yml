@@ -1,0 +1,7 @@
+- hosts: all
+  gather_facts: False
+  become: true
+  become_method: sudo
+  roles:
+    - centos-packages
+    - docker
