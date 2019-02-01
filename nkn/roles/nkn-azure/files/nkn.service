@@ -1,0 +1,8 @@
+[Unit]
+Description=Nkn service
+
+[Service]
+ExecStart=/bin/bash /nkn/entrypoint.sh
+
+[Install]
+WantedBy=multi-user.target

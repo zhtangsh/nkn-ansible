@@ -1,0 +1,28 @@
+---
+# tasks file for centos-packages
+- name: make nkn directory
+  file:
+    path: "/nkn"
+    state: "directory"
+    mode: 0777
+
+- name: copy wallet, configuration and systemd setup
+  copy:
+    src: "{{item.src}}"
+    dest: "{{item.dest}}"
+  with_items:
+    - {src: nkn.service, dest: /etc/systemd/system/nkn.service}
+    - {src: config.json, dest: /nkn/config.json}
+    - {src: wallet.dat, dest: /nkn/wallet.json}
+
+- name: copy entrypoint shell
+  copy:
+    src: "{{item.src}}"
+    dest: "{{item.dest}}"
+  with_items:
+    - {src: entrypoint.sh, dest: /nkn/entrypoint.sh}
+
+- name: start nkn
+  systemd:
+    state: started
+    name: nkn

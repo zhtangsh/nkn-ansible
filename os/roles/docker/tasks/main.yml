@@ -4,17 +4,3 @@
   systemd:
     state: started
     name: docker
-
-- name: add docker stable repo
-  yum_repository:
-    description: docker stable reposiotry
-    baseurl: "{{docker.repo}}"
-
-- name: install docker
-  yum:
-    name: "{{ item }}"
-    state: latest
-  with_items:
-    - docker-ce
-    - docker-ce-cli
-    - containerd.io

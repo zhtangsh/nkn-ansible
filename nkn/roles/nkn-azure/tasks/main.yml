@@ -1,0 +1,27 @@
+---
+# tasks file for centos-packages
+- name: copy wallet, configuration and systemd setup
+  copy:
+    src: "{{item.src}}"
+    dest: "{{item.dest}}"
+  with_items:
+    - {src: nkn.service, dest: ~/}
+    - {src: config.json, dest: ~/}
+    - {src: wallet.dat, dest: ~/}
+- name: copy binary
+  copy:
+    src: "{{item.src}}"
+    dest: "{{item.dest}}"
+    mode: 0777
+  with_items:
+    - {src: nknc, dest: ~/}
+    - {src: nknd, dest: ~/}
+    - {src: install.sh, dest: ~/}
+
+- name: copy entrypoint shell
+  template:
+    src: "{{item.src}}"
+    dest: "{{item.dest}}"
+    mode: 0777
+  with_items:
+    - {src: entrypoint.sh, dest: ~/}
