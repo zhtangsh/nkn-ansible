@@ -1,5 +1,5 @@
 ---
-# tasks file for centos-packages
+# tasks file for nkn-systemd
 - name: make nkn directory
   file:
     path: "/nkn"

@@ -1,5 +1,5 @@
 *.dat
+*.retry
 inventory
 nknd
 nknc
-.retry

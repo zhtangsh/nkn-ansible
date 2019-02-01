@@ -1,5 +1,5 @@
 ---
-# tasks file for centos-packages
+# tasks file for nkn-docker
 - name: Pull nkn image
   shell: docker pull "{{nkn.image}}"
 

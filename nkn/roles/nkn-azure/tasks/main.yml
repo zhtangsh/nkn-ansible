@@ -1,5 +1,5 @@
 ---
-# tasks file for centos-packages
+# tasks file for nkn-azure
 - name: copy wallet, configuration and systemd setup
   copy:
     src: "{{item.src}}"
@@ -17,6 +17,7 @@
     - {src: nknc, dest: ~/}
     - {src: nknd, dest: ~/}
     - {src: install.sh, dest: ~/}
+    - {src: reinstall.sh, dest: ~/}
 
 - name: copy entrypoint shell
   template:

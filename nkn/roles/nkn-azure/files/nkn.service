@@ -2,6 +2,7 @@
 Description=Nkn service
 
 [Service]
+Restart=always
 ExecStart=/bin/bash /nkn/entrypoint.sh
 
 [Install]

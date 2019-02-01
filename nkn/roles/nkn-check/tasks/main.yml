@@ -1,0 +1,8 @@
+---
+# tasks file for nkn-check
+- name: check node status
+  shell: nknc info -s
+  register: ret
+
+- name: show relay counts
+  debug: var=((ret.stdout|from_json)['result']['relayMessageCount'])
