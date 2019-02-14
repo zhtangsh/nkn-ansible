@@ -6,6 +6,14 @@ install:
 install-ali:
 	@ ansible-playbook -i inventory/ali.yml playbook/nkn-ali.yml
 
+.PHONY: install-vultr
+install-vultr:
+	@ ansible-playbook -i inventory/vultr.yml playbook/nkn-vultr.yml
+
+.PHONY: check-vultr
+check-vultr:
+	@ ansible-playbook -i inventory/vultr.yml playbook/nkn-check-docker.yml
+
 .PHONY: check-ali
 check-ali:
 	@ ansible-playbook -i inventory/ali.yml playbook/nkn-check.yml
