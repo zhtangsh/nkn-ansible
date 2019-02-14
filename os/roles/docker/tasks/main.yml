@@ -2,5 +2,6 @@
 # tasks file for centos-packages
 - name: start docker
   systemd:
+    enabled: yes
     state: started
     name: docker

@@ -10,9 +10,7 @@
     - lvm2
 
 - name: add docker stable repo
-  yum_repository:
-    description: docker stable reposiotry
-    baseurl: "{{docker.repo}}"
+  shell: yum-config-manager --add-repo {{docker.repo}}
 
 - name: install docker
   yum:

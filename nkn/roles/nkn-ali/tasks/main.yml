@@ -34,8 +34,8 @@
 
 - name: install nkn
   when: nkn_svc.stderr == "Unit nkn.service could not be found."
-  shell: echo {{ansible_ssh_pass}} | /root/install.sh
+  shell: /root/install.sh
 
 - name: update nkn
   when: mode == "update"
-  shell: echo {{ansible_ssh_pass}} | /root/reinstall.sh
+  shell: /root/reinstall.sh

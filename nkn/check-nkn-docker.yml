@@ -1,5 +1,4 @@
 - hosts: all
   gather_facts: False
   roles:
-    - centos-packages
-    - docker
+    - nkn-docker-check
