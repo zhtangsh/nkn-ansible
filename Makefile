@@ -11,7 +11,7 @@ install-do:
 	@ ansible-playbook -i inventory/do.yml playbook/nkn-vultr.yml
 
 .PHONY: check-do
-check-vultr:
+check-do:
 	@ ansible-playbook -i inventory/do.yml playbook/nkn-check-docker.yml
 
 .PHONY: install-vultr
