@@ -20,5 +20,9 @@
   shell: docker rm -f nkn
   ignore_errors: yes
 
+- name: remove previous nkn log
+  shell: rm -f /nkn/Log*
+  ignore_errors: yes
+
 - name: start nkn container
   shell: docker run -d --restart=always --name=nkn -v /nkn:/nkn -p 30001-30003:30001-30003 "{{nkn.image}}" nknd -p "{{nkn.password}}"
