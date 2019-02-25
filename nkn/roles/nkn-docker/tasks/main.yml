@@ -21,7 +21,7 @@
   ignore_errors: yes
 
 - name: remove previous nkn log
-  shell: rm -f /nkn/Log*
+  shell: rm -f /nkn/Log/*
   ignore_errors: yes
 
 - name: start nkn container
