@@ -4,29 +4,25 @@ This project provide a set of ansible script to install nkn[https://github.com/n
 - Via docker
 - Via systemd unit service
 
-Currently this project could be used to install/upgrade nodes in following cloud computing service.
-- Azure
+Currently this project is tested to be used with following VPS/Cloud computing service.
 - Alibaba cloud
 - Vultr
 - Digital Ocean
+- Hosten
 
 ## Usage
 ### Prerequisites
 You need manually prepare wallet file, nknc and nknd to corresponding location
-- Azure:
-  - Put wallet file to `nkn/roles/nkn-azure/files/wallet.dat`
-  - Put nknc binary to `nkn/roles/nkn-azure/files/nknc`
-  - Put nknd binary to `nkn/roles/nkn-azure/files/nknd`
-- Ali:
-  - Put wallet file to `nkn/roles/nkn-ali/files/wallet.dat`
-  - Put nknc binary to `nkn/roles/nkn-ali/files/nknc`
-  - Put nknd binary to `nkn/roles/nkn-ali/files/nknd`
-- Vultr:
-  - Put wallet file to `nkn/roles/nkn-docker/files/wallet.dat`
-- Digital ocean:
+
+Install nkn with systemd
+  - Put wallet file to `nkn/roles/nkn-systemd/files/wallet.dat`
+  - Put nknc binary to `nkn/roles/nkn-systemd/files/nknc`
+  - Put nknd binary to `nkn/roles/nkn-systemd/files/nknd`
+
+Install nkn with docker
   - Put wallet file to `nkn/roles/nkn-docker/files/wallet.dat`
 
-Then you should have an inventory file that holds info of your nodes. A sample host file `inventory/azure.yml` looks like something bellow
+Then you should have an inventory file that holds info of your nodes. A sample host file `inventory/vultr.yml` looks like something bellow
 ```
 ---
 all:
@@ -34,6 +30,7 @@ all:
     nkn:
       image: zhtangsh/nkn:v0.7.5-alpha
       password: yourPassword
+      batchSize: 256
   children:
     centos:
       vars:
@@ -46,67 +43,54 @@ all:
 
 ### Installation
 
-Run following ansible command to install nkn service via systemd service for Azure and Alibaba cloud.
+Run following ansible command to install nkn service via systemd service.
 
-Azure
-```
-ansible-playbook -i inventory/azure.yml playbook/nkn-azure.yml
-```
-
-Alibaba cloud
-```
-ansible-playbook -i inventory/ali.yml playbook/nkn-ali.yml
-```
-
-Run following ansible command to install nkn service via docker container for Vultr and Digital Ocean.
-
-Vultr
-```
-ansible-playbook -i inventory/vultr.yml playbook/nkn-vultr.yml
-```
-
-Digital Ocean
+Alibaba cloud with inventory file `inventory/ali.yml`
 
 ```
-ansible-playbook -i inventory/do.yml playbook/nkn-vultr.yml
+ansible-playbook -i inventory/ali.yml playbook/nkn-systemd.yml
 ```
 
-### Upgrade
-Upgrade is simple by following steps bellow.
-- Replace nknd and nknc under file folder for corresponding VPS platform
-- Update nkn version in inventory file.
-- Run commands for corresponding VPS platform
-
-Azure
-```
-ansible-playbook -i inventory/azure.yml playbook/nkn-azure-update.yml
-```
-
-Alibaba cloud
-```
-ansible-playbook -i inventory/ali.yml playbook/nkn-ali-update.yml
-```
-
-Vultr
-```
-ansible-playbook -i inventory/vultr.yml playbook/nkn-vultr.yml
-```
-
-Digital Ocean
+Hosten with inventory file `inventory/hosten.yml`
 
 ```
-ansible-playbook -i inventory/do.yml playbook/nkn-vultr.yml
+ansible-playbook -i inventory/hosten.yml playbook/nkn-systemd.yml
+```
+
+Run following ansible command to install nkn service via docker.
+
+Vultr with inventory file `inventory/vultr.yml`
+```
+ansible-playbook -i inventory/vultr.yml playbook/nkn-docker.yml
+```
+
+Digital Ocean with inventory file `inventory/do.yml`
+
+```
+ansible-playbook -i inventory/do.yml playbook/nkn-docker.yml
 ```
 
 ### Status check
-Run following command for status check
+
+For nkn installed with systemd, run following command to perform status check
 ```
-ansible-playbook -i inventory/ali.yml playbook/nkn-check.yml
+ansible-playbook -i inventory/ali.yml playbook/nkn-check-systemd.yml
 ```
-It will collect information of command `nknc info -s` for all nodes. A sample output looks like bellow.
+
+For nkn installed with docker, run following command to perform status check
 ```
-ok: [47.254.133.210] => {
-    "msg": "version=v0.7.4-alpha, syncState:SyncStarted, height:230359, relayCount:353"
+ansible-playbook -i inventory/vultr.yml playbook/nkn-check-docker.yml
+```
+
+
+This check script will collect infomation via `nknc info -s`. A sample output looks like bellow.
+
+```
+ok: [95.179.156.213] => {
+    "msg": "version=v0.7.6-alpha, syncState:PersistFinished, height:625034, relayCount:19.9033, upTime:22h56m3s"
+}
+ok: [95.179.156.213] => {
+    "msg": "Mined 0"
 }
 ```
 ## Community

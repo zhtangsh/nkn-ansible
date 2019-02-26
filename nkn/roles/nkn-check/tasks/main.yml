@@ -14,4 +14,11 @@
   register: ret
 
 - name: show node status
-  debug: msg="version={{((ret.stdout|from_json)['result']['version'])}}, syncState:{{((ret.stdout|from_json)['result']['syncState'])}}, height:{{((ret.stdout|from_json)['result']['height'])}}, relayCount:{{((ret.stdout|from_json)['result']['relayMessageCount']/10000)}}"
+  debug: msg="version={{((ret.stdout|from_json)['result']['version'])}}, syncState:{{((ret.stdout|from_json)['result']['syncState'])}}, height:{{((ret.stdout|from_json)['result']['height'])}}, relayCount:{{((ret.stdout|from_json)['result']['relayMessageCount']/10000)}}, upTime:{{((ret.stdout|from_json)['result']['uptime'])}}"
+
+- name: check block status
+  shell: grep -Rni "proposer" /nkn/Log/ | wc -l
+  register: count
+
+- name: show block count
+  debug: msg="Mined {{count.stdout}}"

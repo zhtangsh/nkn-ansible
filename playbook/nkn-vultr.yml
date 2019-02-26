@@ -1,3 +1,0 @@
----
-- import_playbook: ../os/install-centos.yml
-- import_playbook: ../nkn/install-nkn-docker.yml
