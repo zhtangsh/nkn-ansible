@@ -1,7 +1,7 @@
-﻿{
+{
   "HttpWsPort": 30002,
   "HttpJsonPort": 30003,
-  "SyncBatchWindowSize":64,
+  "SyncBatchWindowSize": {{ nkn.batchSize }},
   "SeedList": [
     "http://testnet-seed-0001.nkn.org:30003",
     "http://testnet-seed-0002.nkn.org:30003",

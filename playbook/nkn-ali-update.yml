@@ -1,4 +1,0 @@
----
-- import_playbook: ../nkn/install-nkn-ali.yml
-  vars:
-    mode: "update"
