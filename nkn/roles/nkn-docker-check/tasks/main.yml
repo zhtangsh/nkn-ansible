@@ -5,7 +5,7 @@
   register: ret
 
 - name: show node status
-  debug: msg="version={{((ret.stdout|from_json)['result']['version'])}}, syncState:{{((ret.stdout|from_json)['result']['syncState'])}}, height:{{((ret.stdout|from_json)['result']['height'])}}, relayCount:{{((ret.stdout|from_json)['result']['relayMessageCount']/10000)}}, upTime:{{((ret.stdout|from_json)['result']['uptime'])}}"
+  debug: msg="version={{((ret.stdout|from_json)['result']['version'])}}, syncState:{{((ret.stdout|from_json)['result']['syncState'])}}, height:{{((ret.stdout|from_json)['result']['height'])}}, relayCount:{{((ret.stdout|from_json)['result']['relayMessageCount']/10000)}}, relayPerSecond:{{((ret.stdout|from_json)['result']['relayMessageCount']/((ret.stdout|from_json)['result']['uptime']))}}, upTime:{{((ret.stdout|from_json)['result']['uptime']//3600)}}h{{((ret.stdout|from_json)['result']['uptime']//60)}}m{{((ret.stdout|from_json)['result']['uptime']%60)}}s"
 
 - name: check block status
   shell: grep -Rni "proposer" /nkn/Log/ | wc -l
