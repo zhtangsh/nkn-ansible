@@ -1,0 +1,28 @@
+---
+# tasks file for nkn-docker
+- name: Pull nkn image
+  shell: docker pull "{{nkn.image}}"
+
+- name: create nkn mountpoint
+  file:
+    path: "/nkn"
+    state: "directory"
+
+- name: copy wallet and configuration file
+  copy:
+    src: "{{item.src}}"
+    dest: "{{item.dest}}"
+  with_items:
+    - {src: config.json, dest: /nkn/config.json}
+    - {src: wallet.dat, dest: /nkn/wallet.dat}
+
+- name: remove nkn container
+  shell: docker rm -f nkn
+  ignore_errors: yes
+
+- name: remove previous nkn log
+  shell: rm -f /nkn/Log/*
+  ignore_errors: yes
+
+- name: start nkn container
+  shell: docker run -d --restart=always --name=nkn -v /nkn:/nkn -p 30001-30003:30001-30003 "{{nkn.image}}" nknd -p "{{nkn.password}}"

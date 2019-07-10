@@ -1,0 +1,4 @@
+---
+- import_playbook: ../nkn/install-nkn-azure.yml
+  vars:
+    mode: "install"

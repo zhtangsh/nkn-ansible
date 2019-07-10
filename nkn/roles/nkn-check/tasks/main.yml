@@ -1,0 +1,25 @@
+---
+# tasks file for nkn-check
+- name: check nkn service
+  shell: systemctl status nkn
+  ignore_errors: yes
+  register: nkn_svc
+
+- name: show nkn service status
+  when: nkn_svc.stderr
+  debug: msg="{{nkn_svc.stderr}}"
+
+- name: check node status
+  shell: nknc info -s
+  register: ret
+
+- name: check node connections
+  shell: nknc info --connections
+  register: ret2
+
+- name: check block status
+  shell: grep -Rni "proposer" /nkn/Log/ | wc -l
+  register: count
+
+- name: show node status
+  debug: msg="version={{((ret.stdout|from_json)['result']['version'])}}, syncState:{{((ret.stdout|from_json)['result']['syncState'])}}, height:{{((ret.stdout|from_json)['result']['height'])}}, relayCount:{{((ret.stdout|from_json)['result']['relayMessageCount'])}}, relayPerHour:{{((ret.stdout|from_json)['result']['relayMessageCount']*60/((ret.stdout|from_json)['result']['uptime']))}}, upTime:{{((ret.stdout|from_json)['result']['uptime']//3600)}}h{{((ret.stdout|from_json)['result']['uptime']//60%60)}}m{{((ret.stdout|from_json)['result']['uptime']%60)}}s, currentBlocksMined:{{((ret.stdout|from_json)['result']['proposalSubmitted'])}} ,totalBlocksMined:{{count.stdout}}, connections:{{((ret2.stdout|from_json)['result'])}}"

@@ -1,2 +1,5 @@
-.dat
+*.dat
+*.retry
 inventory
+nknd
+nknc

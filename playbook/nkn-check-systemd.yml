@@ -1,0 +1,2 @@
+---
+- import_playbook: ../nkn/check-nkn-systemd.yml

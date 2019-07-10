@@ -1,0 +1,86 @@
+---
+#tasks file for nkn systemd
+- name: Install required tools
+  yum:
+    name: "{{ item }}"
+    state: latest
+  with_items:
+    - unzip
+
+- name: Check if nkn is running
+  stat:
+    path: /etc/systemd/system/nkn.service
+  register: nkn_tmp
+
+- name: Stop nkn if exist
+  systemd:
+    name: nkn
+    state: stopped
+  when: nkn_tmp.stat.exists
+
+- name: disable firewalld
+  service:
+    name: firewalld
+    state: stopped
+    enabled: no
+
+- name: Generate 32 bit password
+  shell: head /dev/urandom | tr -dc A-Za-z0-9 | head -c32
+  register: password_tmp
+
+- name: Set variables
+  set_fact:
+    password: "{{password_tmp.stdout}}"
+
+- name: Make required path
+  file:
+    path: "/nkn/"
+    state: "directory"
+    mode: 0777
+
+- name: Clear outdated files
+  file:
+    path: "{{item.path}}"
+    state: "{{item.state}}"
+  with_items:
+    - {path: /nkn/password.pwd, state: absent}
+    - {path: /nkn/config.json, state: absent}
+    - {path: /nkn/wallet.json, state: absent}
+    - {path: /nkn/entrypoint.sh, state: absent}
+    - {path: "/root/{{ arch }}", state: absent}
+    - {path: /usr/local/bin/nknc, state: absent}
+    - {path: /usr/local/bin/nknd, state: absent}
+
+- name: Copy files
+  template:
+    src: "{{item.src}}"
+    dest: "{{item.dest}}"
+    mode: 0400
+  with_items:
+    - {src: password.pwd, dest: /nkn/password.pwd}
+    - {src: config.json, dest: /nkn/config.json}
+    - {src: entrypoint.sh, dest: /nkn/entrypoint.sh}
+    - {src: nkn.service, dest: /etc/systemd/system/nkn.service}
+
+- name: Download nkn from github
+  async: 3600
+  poll: 10
+  unarchive:
+    src: "{{nkn.binary}}"
+    remote_src: yes
+    dest: /root
+
+- name: Install nkn
+  shell: mv /root/{{ arch }}/* /usr/local/bin/ && rm -rf /root/{{ arch }}
+
+- name: Create wallet
+  shell: cat password.pwd password.pwd | nknc wallet -c
+  args:
+    chdir: /nkn
+
+- name: Start nkn server
+  systemd:
+    name: nkn
+    enabled: yes
+    state: restarted
+    daemon_reload: yes

@@ -1,0 +1,12 @@
+---
+# tasks file for nkn-check
+- name: check node status
+  shell: docker exec nkn nknc info -s
+  register: ret
+
+- name: check block status
+  shell: grep -Rni "proposer" /nkn/Log/ | wc -l
+  register: count
+
+- name: show node status
+  debug: msg="version={{((ret.stdout|from_json)['result']['version'])}}, syncState:{{((ret.stdout|from_json)['result']['syncState'])}}, height:{{((ret.stdout|from_json)['result']['height'])}}, relayCount:{{((ret.stdout|from_json)['result']['relayMessageCount']/10000)}}, relayPerSecond:{{((ret.stdout|from_json)['result']['relayMessageCount']/((ret.stdout|from_json)['result']['uptime']))}}, upTime:{{((ret.stdout|from_json)['result']['uptime']//3600)}}h{{((ret.stdout|from_json)['result']['uptime']//60%60)}}m{{((ret.stdout|from_json)['result']['uptime']%60)}}s,blockMined:{{count.stdout}}"

@@ -1,0 +1,41 @@
+---
+#tasks file for nkn-azure
+- name: copy wallet, configuration and systemd setup
+  copy:
+    src: "{{item.src}}"
+    dest: "{{item.dest}}"
+  with_items:
+    - {src: nkn.service, dest: ~/}
+    - {src: config.json, dest: ~/}
+    - {src: wallet.dat, dest: ~/}
+- name: copy binary
+  copy:
+    src: "{{item.src}}"
+    dest: "{{item.dest}}"
+    mode: 0777
+  with_items:
+    - {src: nknc, dest: ~/}
+    - {src: nknd, dest: ~/}
+    - {src: install.sh, dest: ~/}
+    - {src: reinstall.sh, dest: ~/}
+
+- name: copy entrypoint shell
+  template:
+    src: "{{item.src}}"
+    dest: "{{item.dest}}"
+    mode: 0777
+  with_items:
+    - {src: entrypoint.sh, dest: ~/}
+
+- name: check nkn service
+  shell: systemctl status nkn
+  ignore_errors: yes
+  register: nkn_svc
+
+- name: install nkn
+  when: nkn_svc.stderr == "Unit nkn.service could not be found."
+  shell: echo {{ansible_ssh_pass}} | sudo -S /home/{{ansible_ssh_user}}/install.sh
+
+- name: update nkn
+  when: mode == "update"
+  shell: echo {{ansible_ssh_pass}} | sudo -S /home/{{ansible_ssh_user}}/reinstall.sh
