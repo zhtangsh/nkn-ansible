@@ -63,8 +63,6 @@
     - {src: nkn.service, dest: /etc/systemd/system/nkn.service}
 
 - name: Download nkn from github
-  async: 3600
-  poll: 10
   unarchive:
     src: "{{nkn.binary}}"
     remote_src: yes
