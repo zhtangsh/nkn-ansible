@@ -1,4 +1,4 @@
 ---
 - import_playbook: ../nkn/install-nkn-systemd.yml
   vars:
-    generate_wallet: True
+    generate_wallet: False
